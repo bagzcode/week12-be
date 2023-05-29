@@ -21,29 +21,6 @@ def get_db():
     finally:
         db.close()
 
-
-todos = {
-    1: {
-        "title": "task 1",
-        "description": "this is the first task",
-        "created": "March 13, 2023 at 11:35:51 PM UTC+7",
-        "completed": True
-    },
-    2: {
-        "title": "task 2",
-        "description": "this is the second task",
-        "created": "March 14, 2023 at 12:36:50 PM UTC+7",
-        "completed": False
-    },
-    3: {
-        "title": "task 3",
-        "description": "this is the third task",
-        "created": "March 15, 2023 at 13:37:49 PM UTC+7",
-        "completed": True
-    }
-}
-
-
 @router.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_email(db, email=user.email)
@@ -55,6 +32,8 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 @router.get("/users/", response_model=List[schemas.User])
 def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = crud.get_users(db, skip=skip, limit=limit)
+    if users is None:
+        raise HTTPException(status_code=404, detail="User not found from the list")
     return users
 
 

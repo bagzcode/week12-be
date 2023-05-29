@@ -1,6 +1,9 @@
 .vercel
-.vecode
+.vscode
+.DS_Store
+.git
 env
 __pycache__
 todo_app.db
 vercel.json
+.gitignore
